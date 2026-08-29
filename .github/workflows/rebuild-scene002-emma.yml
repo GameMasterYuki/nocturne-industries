@@ -1,0 +1,42 @@
+name: Rebuild Scene 002 Emma CG
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/rebuild-scene002-emma.yml'
+      - 'assets/chunks/scene_002_emma/**'
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Rebuild and verify Emma WebP
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets
+          cat assets/chunks/scene_002_emma/part-*.bin > assets/scene_002_emma.webp
+          test "$(wc -c < assets/scene_002_emma.webp)" -eq 38530
+          file assets/scene_002_emma.webp
+          echo "dcbcbef8a999a53453cd362e041abe5d6fc1b65b53f4a20d88bc5dbae768bb2f  assets/scene_002_emma.webp" | sha256sum -c -
+
+      - name: Commit rebuilt image
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/scene_002_emma.webp
+          if git diff --cached --quiet; then
+            echo 'No image change.'
+            exit 0
+          fi
+          git commit -m 'Rebuild verified Scene 002 Emma CG'
+          git push
