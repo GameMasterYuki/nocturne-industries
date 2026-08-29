@@ -1,0 +1,49 @@
+name: Fix Scene 002 Emma presentation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-scene002-emma-presentation.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Patch Scene 002 transition and framing
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+
+          old="function bg(){return st.scene===1?\"url('assets/scene_001_victoria.webp')\":\"url('assets/scene_002_emma.webp')\"}"
+          new="function bg(){return (st.scene===1||(st.scene===2&&st.page<2))?\"url('assets/scene_001_victoria.webp')\":\"url('assets/scene_002_emma.webp')\"}"
+          if old in s:
+              s=s.replace(old,new,1)
+
+          old_patch='''    const sceneNo=(typeof st!=="undefined" && st.scene)?st.scene:1;\n    el.style.backgroundImage = sceneNo===2\n      ? "url(\'assets/scene_002_emma.webp\')"\n      : "url(\'assets/scene_001_victoria.webp\')";'''
+          new_patch='''    const sceneNo=(typeof st!=="undefined" && st.scene)?st.scene:1;\n    const emmaVisible = sceneNo===2 && typeof st!=="undefined" && st.page>=2;\n    el.style.backgroundImage = emmaVisible\n      ? "url(\'assets/scene_002_emma.webp\')"\n      : "url(\'assets/scene_001_victoria.webp\')";\n    if(emmaVisible){\n      if(window.innerWidth<=720){\n        el.style.backgroundSize='contain';\n        el.style.backgroundPosition='50% top';\n      }else{\n        el.style.backgroundSize='cover';\n        el.style.backgroundPosition='38% center';\n      }\n      el.style.backgroundRepeat='no-repeat';\n      el.style.backgroundColor='#05070a';\n    }else{\n      el.style.backgroundSize='cover';\n      el.style.backgroundPosition='50% center';\n    }'''
+          if old_patch not in s:
+              raise SystemExit('Scene 002 background patch block not found')
+          s=s.replace(old_patch,new_patch,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit changes
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          if git diff --cached --quiet; then
+            echo 'No changes.'
+            exit 0
+          fi
+          git commit -m 'Fix Scene 002 Emma entrance timing and framing'
+          git push
