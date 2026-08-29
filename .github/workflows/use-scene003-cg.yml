@@ -1,0 +1,49 @@
+name: Wire Scene 003 CG
+on:
+  push:
+    paths:
+      - '.github/workflows/use-scene003-cg.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Patch Scene 003 background
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          old='''    const sceneNo=(typeof st!=="undefined" && st.scene)?st.scene:1;
+    const emmaVisible = sceneNo===2 && typeof st!=="undefined" && st.page>=2;
+    el.style.backgroundImage = emmaVisible
+      ? "url('assets/scene_002_emma.webp')"
+      : "url('assets/scene_001_victoria.webp')";
+    if(emmaVisible){'''
+          new='''    const sceneNo=(typeof st!=="undefined" && st.scene)?st.scene:1;
+    const emmaVisible = sceneNo===2 && typeof st!=="undefined" && st.page>=2;
+    const investigationVisible = sceneNo===3 || sceneNo===4;
+    el.style.backgroundImage = investigationVisible
+      ? "url('assets/scene_003_investigation.webp')"
+      : emmaVisible
+        ? "url('assets/scene_002_emma.webp')"
+        : "url('assets/scene_001_victoria.webp')";
+    if(emmaVisible || investigationVisible){'''
+          if old not in s:
+              raise SystemExit('Scene background patch target not found')
+          s=s.replace(old,new,1)
+          # Scene 003 completion should also retain its investigation CG before the override runs.
+          s=s.replace("style=\"--scene-bg:url('assets/scene_002_emma.webp')\"><section class=\"visual\"></section><section class=\"dialogue\"><div class=\"complete\"><h3>SCENE 003 COMPLETE</h3>", "style=\"--scene-bg:url('assets/scene_003_investigation.webp')\"><section class=\"visual\"></section><section class=\"dialogue\"><div class=\"complete\"><h3>SCENE 003 COMPLETE</h3>",1)
+          p.write_text(s)
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Use investigation CG in Scene 003'
+          git push
