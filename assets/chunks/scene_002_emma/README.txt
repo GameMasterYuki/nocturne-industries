@@ -1,0 +1,1 @@
+Scene 002 Emma CG transfer chunks. Rebuilt by GitHub Actions into assets/scene_002_emma.webp.
