@@ -17,14 +17,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Rebuild WebP from binary chunks
+      - name: Rebuild official WebP from binary chunks
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p assets
-          cat assets/chunks/binary_test/part-*.bin > assets/scene_001_victoria_split_test.webp
-          file assets/scene_001_victoria_split_test.webp
-          test -s assets/scene_001_victoria_split_test.webp
+          cat assets/chunks/binary_test/part-*.bin > assets/scene_001_victoria.webp
+          file assets/scene_001_victoria.webp
+          test -s assets/scene_001_victoria.webp
 
       - name: Commit rebuilt image
         shell: bash
@@ -32,10 +32,10 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add assets/scene_001_victoria_split_test.webp
+          git add assets/scene_001_victoria.webp
           if git diff --cached --quiet; then
             echo 'No image change.'
             exit 0
           fi
-          git commit -m 'Rebuild Scene 001 Victoria CG from binary chunks'
+          git commit -m 'Rebuild official Scene 001 Victoria CG'
           git push
