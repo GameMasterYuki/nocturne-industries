@@ -309,274 +309,425 @@ button{font:inherit;color:inherit}
 }
 </style>
 
+<style id="iphone-first-ui">
+/* v0.2.2 — iPhone-first portrait layout
+   Keeps the desktop/Mac layout intact, but reorganizes the game for
+   one-handed portrait play in Safari/Chrome on modern iPhones. */
+@media (max-width:720px){
+  html,body{width:100%;min-height:100%;overflow-x:hidden;background:#05070a}
+  body{-webkit-text-size-adjust:100%;padding-bottom:env(safe-area-inset-bottom)}
+  #app{width:100%;max-width:none;min-height:100dvh;margin:0;background:#05070a}
+
+  .topbar{
+    min-height:0;
+    display:grid;
+    grid-template-columns:1fr auto;
+    grid-template-areas:
+      "logo actions"
+      "chapter chapter";
+    align-items:center;
+    position:sticky;
+    top:0;
+    z-index:20;
+    backdrop-filter:blur(12px);
+    background:rgba(7,9,14,.96);
+  }
+  .logo{
+    grid-area:logo;
+    min-height:52px;
+    padding:8px 12px;
+    gap:9px;
+    clip-path:none;
+    border-right:0;
+  }
+  .logo-mark{font-size:25px}
+  .logo-copy b{font-size:15px;letter-spacing:.05em}
+  .logo-copy span{display:none}
+  .chapter{
+    grid-area:chapter;
+    min-height:35px;
+    padding:6px 12px 7px;
+    display:flex;
+    gap:10px;
+    font-size:12px;
+    white-space:nowrap;
+    overflow-x:auto;
+    border-top:1px solid #262b34;
+    scrollbar-width:none;
+  }
+  .chapter::-webkit-scrollbar{display:none}
+  .chapter small{font-size:10px}
+  .top-actions{
+    grid-area:actions;
+    padding:6px 8px 6px 0;
+    gap:5px;
+    border:0;
+    justify-content:flex-end;
+  }
+  .top-btn{
+    min-width:0;
+    width:auto;
+    height:34px;
+    padding:0 11px;
+    font-size:11px;
+  }
+
+  .main{
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+    background-position:28% center;
+    background-size:cover;
+    overflow:visible;
+  }
+  .main:before{
+    background:linear-gradient(180deg,rgba(3,5,8,.05) 0%,rgba(3,5,8,.18) 35%,rgba(3,5,8,.78) 67%,rgba(3,5,8,.96) 100%);
+  }
+
+  .character-side{
+    display:block;
+    min-height:42dvh;
+    position:relative;
+  }
+  .char-panel{
+    position:absolute;
+    left:10px;
+    top:10px;
+    z-index:3;
+    width:min(55vw,210px);
+    max-width:none;
+    min-height:0;
+    margin:0;
+    padding:12px 13px 13px;
+    background:linear-gradient(180deg,rgba(8,10,15,.91),rgba(8,10,15,.72));
+    backdrop-filter:blur(5px);
+  }
+  .char-panel h2{font-size:18px;margin-bottom:3px}
+  .char-panel .role{font-size:10px;margin-bottom:8px;color:#c9c3ba}
+  .meter-label{font-size:10px;margin-top:8px}
+  .meter{height:5px;margin-top:4px}
+  .hero-space{display:none}
+
+  .story-side{
+    margin-top:-6dvh;
+    padding:0 10px 12px;
+    gap:8px;
+    position:relative;
+    z-index:4;
+  }
+  .dialogue{
+    min-height:0;
+    padding:15px 16px 16px;
+    border-color:#7b684f;
+    background:linear-gradient(180deg,rgba(8,10,15,.93),rgba(8,10,15,.88));
+    backdrop-filter:blur(8px);
+  }
+  .speaker{font-size:15px;margin-bottom:8px}
+  .dialogue-text{
+    font-size:15px;
+    line-height:1.68;
+    letter-spacing:.01em;
+  }
+  .choices{gap:7px}
+  .choice{
+    min-height:54px;
+    grid-template-columns:43px 1fr;
+    border-radius:2px;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+  }
+  .choice-num{font-size:19px}
+  .choice-label{font-size:14px;line-height:1.38;padding:8px 10px}
+  .choice small{font-size:9px;margin-top:2px}
+  .choice:active{
+    border-color:#b995d1;
+    background:linear-gradient(90deg,rgba(66,37,88,.82),rgba(29,22,38,.95));
+  }
+
+  .bottom{
+    display:grid;
+    grid-template-columns:1fr;
+    min-height:0;
+    border-top:1px solid #594a38;
+  }
+  .bottom-card{
+    border-right:0;
+    border-bottom:1px solid #393126;
+    padding:13px 14px;
+  }
+  .section-title{font-size:11px;margin-bottom:8px}
+  .params{gap:0}
+  .param .ico{font-size:17px}
+  .param .lab{font-size:10px}
+  .param .val{font-size:21px;margin-top:1px}
+  .finance{min-height:74px}
+  .finance>div{padding:0 12px}
+  .finance .label{font-size:10px;margin-bottom:7px}
+  .finance .big{font-size:22px;white-space:nowrap}
+  .finance .sub{font-size:10px;margin-top:2px}
+  .checkpoint p{display:none}
+  .codebox{padding:8px 9px;font-size:9px;overflow:hidden}
+  .codebox span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .copy{font-size:14px;flex:0 0 auto}
+
+  .notice{
+    top:96px;
+    width:calc(100% - 28px);
+    text-align:center;
+    font-size:12px;
+  }
+  .end-screen{min-height:70dvh;padding:46px 22px}
+  .end-screen h2{font-size:25px}
+  .end-screen p{font-size:15px;line-height:1.7}
+}
+
+/* Small iPhones / zoomed display */
+@media (max-width:390px){
+  .character-side{min-height:39dvh}
+  .char-panel{width:58vw;padding:10px 11px}
+  .story-side{margin-top:-4dvh}
+  .dialogue-text{font-size:14px}
+  .choice{min-height:51px}
+  .choice-label{font-size:13px}
+  .finance .big{font-size:20px}
+}
+
+/* Landscape iPhone: compact, game-like split view instead of a long page. */
+@media (max-height:500px) and (orientation:landscape) and (max-width:1000px){
+  .topbar{position:relative;grid-template-areas:"logo chapter actions";grid-template-columns:170px 1fr auto}
+  .chapter{border-top:0;min-height:50px;padding:0 10px;align-items:center}
+  .main{display:grid;grid-template-columns:42% 58%;min-height:calc(100dvh - 52px)}
+  .character-side{min-height:0}
+  .story-side{margin-top:0;padding:7px;max-height:calc(100dvh - 52px);overflow:auto}
+  .dialogue{padding:11px 13px}
+  .dialogue-text{font-size:13px;line-height:1.45}
+  .choice{min-height:42px}
+  .choice-label{font-size:12px;padding:5px 8px}
+  .bottom{display:none}
+}
+</style>
+
 </head>
 <body>
-<div id="notice" class="notice"></div>
 <div id="app">
   <header class="topbar">
     <div class="logo">
-      <div class="logo-mark">◇</div>
+      <div class="logo-mark">◈</div>
       <div class="logo-copy"><b>NOCTURNE</b><span>INDUSTRIES</span></div>
     </div>
     <div class="chapter">
-      <strong id="chapterName">CHAPTER 1</strong>
-      <small id="chapterSub">初任務</small>
-      <strong id="dayText">DAY 7　10:31</strong>
+      <strong id="chapterText">CHAPTER 1</strong>
+      <span id="missionText">初任務</span>
+      <small id="dayText">DAY 1 / 09:10</small>
     </div>
     <div class="top-actions">
-      <button class="top-btn" id="logBtn">LOG</button>
-      <button class="top-btn" id="menuBtn">☰ MENU</button>
+      <button class="top-btn" onclick="showNotice('LOGは次期実装予定です')">LOG</button>
+      <button class="top-btn" onclick="showNotice('MENUは次期実装予定です')">MENU</button>
     </div>
   </header>
 
-  <main id="game"></main>
-
-  <section class="bottom">
-    <div class="bottom-card">
-      <div class="section-title">PARAMETER</div>
-      <div class="params">
-        <div class="param"><div class="ico">◉</div><div class="lab">判断力</div><div class="val" id="judgement">3</div></div>
-        <div class="param"><div class="ico">♨</div><div class="lab">大胆さ</div><div class="val" id="boldness">3</div></div>
-        <div class="param"><div class="ico">♢</div><div class="lab">信頼度</div><div class="val" id="trust">5</div></div>
-      </div>
-    </div>
-
-    <div class="bottom-card">
-      <div class="finance">
-        <div>
-          <div class="label">FUNDS</div>
-          <div style="font-size:15px;margin-bottom:4px">資金</div>
-          <div class="big" id="funds">2.8</div>
-          <div class="sub">億円</div>
-        </div>
-        <div>
-          <div class="label">INVESTMENT</div>
-          <div style="font-size:15px;margin-bottom:4px">投資中</div>
-          <div class="sub" id="investment">なし</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="bottom-card checkpoint">
-      <div class="section-title">CHECKPOINT</div>
-      <p>このコードをコピーして<br>このチャットに送ってください</p>
-      <div class="codebox"><span id="code">NI-C1-I3B3T5M280-P2221211111</span><button class="copy" id="copyBtn">▣</button></div>
-    </div>
-  </section>
+  <div id="game"></div>
 </div>
+<div id="notice" class="notice"></div>
 
 <script>
-const scenes = {
-  intro:{
-    chapter:"PROLOGUE",sub:"継承",day:"DAY 1　09:00",
-    name:"ヴィクトリア・クロウ",role:"NOCTURNE INDUSTRIES CEO",trust:8,aff:0,
-    speaker:"ヴィクトリア", text:"「あなたの判断力が必要です。」\n\nNOCTURNE本社最上階。\n美しいCEOは、あなたを“Strategist”と呼び、経営不振の子会社再建を任せる。",
+const scenes = [
+  {
+    speaker:'ヴィクトリア・クロウ', role:'NOCTURNE INDUSTRIES CEO', trust:35, affection:12,
+    chapter:'PROLOGUE', mission:'招待', day:'DAY 1 / 09:10',
+    text:'「あなたの力が必要です。」\n\n黒い高層ビルの最上階。ヴィクトリアは、衰退した子会社 NOCTURNE MATERIALS の再建をあなたに託した。',
     choices:[
-      ["引き受ける","物語を始める","office",{}],
-      ["条件を確認する","ヴィクトリアの意図を探る","office",{judgement:1}],
-      ["会社の現状を聞く","経営情報を得る","office",{judgement:1}],
-      ["ひとまず承諾する","大胆さ +1","office",{boldness:1}]
-    ]
+      ['引き受ける','まず会社の状況を見せてください'],
+      ['条件を聞く','私に何を期待していますか？'],
+      ['彼女を観察する','この人は何を知っている？'],
+      ['冗談めかす','ずいぶん大きな仕事ですね']
+    ], stat:{judgement:1,bold:1,trust:1}, next:1
   },
-  office:{
-    chapter:"CHAPTER 1",sub:"初任務",day:"DAY 1　10:31",
-    name:"エマ・ローレンス",role:"ヴィクトリア秘書",trust:12,aff:5,
-    speaker:"エマ", text:"「分かりました。」\n\nエマは明らかに安心した表情を見せる。\n\n「それなら、工場へ行く前に一つだけ。」\n「市場情報を見ておいた方がいいと思います。」",
+  {
+    speaker:'エマ', role:'CEO室付 / 秘書', trust:62, affection:38,
+    chapter:'CHAPTER 1', mission:'初任務', day:'DAY 2 / 10:31',
+    text:'「お待ちしていました。今日から私がサポートします。」\n\n金髪のポニーテールを揺らし、エマが笑う。工場には不可解な未使用区画と、消えた購買記録が残されていた。',
     choices:[
-      ["ニュースを見る","市場情報から手掛かりを得る","basement",{judgement:1}],
-      ["会社の内部データをさらに調べる","経営情報を深掘り","basement",{judgement:1}],
-      ["エマに彼のことをもっと詳しく聞く","関係性イベント","basement",{trust:1}],
-      ["工場へ急ぐ","大胆さ +1","basement",{boldness:1}]
-    ]
+      ['工場へ向かう','現場を見れば何かわかる'],
+      ['数字を見る','購買・在庫・売上を突き合わせる'],
+      ['エマに聞く','彼女が気づいている違和感は？'],
+      ['CEOの狙いを考える','なぜ自分をここへ？']
+    ], stat:{judgement:2,bold:2,trust:3}, next:2
   },
-  basement:{
-    chapter:"CHAPTER 1",sub:"B4からの回収",day:"DAY 7　09:52",
-    name:"エマ・ローレンス",role:"専属秘書",trust:18,aff:8,
-    speaker:"System", text:"地下4階。\n古い社内図面に存在しないフロア。\n\nVANTA LABORATORIES。\n装置の銘板には『MANUFACTURED: 2049』。\n現在は2026年だ。",
+  {
+    speaker:'エマ', role:'同行者', trust:76, affection:54,
+    chapter:'CHAPTER 1', mission:'B4', day:'DAY 5 / 18:42',
+    text:'地下4階。存在しないはずの研究区画。\n\n扉の向こうから巨大な電力消費が検出される。エマを危険から遠ざけながら、あなたは施設へ入る。',
     choices:[
-      ["Emmaを守るように先へ進む","大胆さ +1","irina",{boldness:1,trust:1}],
-      ["周囲の装置を観察する","判断力 +1","irina",{judgement:1}],
-      ["施設ログを確認する","情報優先","irina",{judgement:1}],
-      ["一度退路を確保する","安全確保","irina",{trust:1}]
-    ]
+      ['先に装置を観察する','戦う前に状況を把握する'],
+      ['エマを後方へ','安全を最優先する'],
+      ['通信を試す','相手に意思があるか確認'],
+      ['電源を切る','危険源を停止させる']
+    ], stat:{judgement:4,bold:4,trust:7}, next:3
   },
-  irina:{
-    chapter:"CHAPTER 1",sub:"イリーナとの取引",day:"DAY 7　10:02",
-    name:"イリーナ・ヴォルコワ",role:"VANTA 研究者",trust:5,aff:0,
-    speaker:"イリーナ", text:"銀髪の女性研究者。\n黒いサイバネティック右腕が戦闘モードへ移行する。\n\n「……何者？」",
+  {
+    speaker:'イリーナ・ヴォルコワ', role:'VANTA / 技術戦闘員', trust:28, affection:10,
+    chapter:'CHAPTER 1', mission:'PROJECT EVE', day:'DAY 5 / 19:03',
+    text:'銀髪の女性が機械の右腕を構える。だが敵意の奥に迷いが見える。\n\n「……主電源よ。原因はそこにある。」\n\n81MW。LEVEL Ω。装置の表示には MANUFACTURED: 2049。',
     choices:[
-      ["あなたならどれを選ぶ？","敵対を緩和する","power",{trust:1}],
-      ["設備異常を指摘する","判断力 +1","power",{judgement:1}],
-      ["武器を下ろすよう求める","大胆さ +1","power",{boldness:1}],
-      ["Emmaを後ろへ下げる","信頼 +1","power",{trust:1}]
-    ]
+      ['段階的に電力を落とす','装置へのショックを避ける'],
+      ['イリーナに説明させる','PROJECT EVEとは何だ'],
+      ['彼女と協力する','今は敵味方より状況解決だ'],
+      ['装置に話しかける','中に誰かいる']
+    ], stat:{judgement:6,bold:4,trust:7}, next:4
   },
-  power:{
-    chapter:"CHAPTER 1",sub:"LEVEL Ω",day:"DAY 7　10:08",
-    name:"イリーナ・ヴォルコワ",role:"一時協力者",trust:14,aff:2,
-    speaker:"System", text:"UNKNOWN DEVICE：81MW。\n優先度 LEVEL Ω。\n\n出力を落とす。\nしかし装置は自ら電力を奪い返し、端末へ表示した。\n\nPLEASE DON'T TURN ME OFF.",
+  {
+    speaker:'E-07', role:'PROJECT EVE / 人工生命', trust:60, affection:58,
+    chapter:'CHAPTER 1', mission:'EVE', day:'DAY 5 / 19:21',
+    text:'PLEASE DON\'T TURN ME OFF.\n\nガラスの向こうの少女が目を開く。\n\n「Strategist. I have been waiting for you.」\n\n彼女は、あなたを知っている。あなたにはその記憶がない。',
     choices:[
-      ["電力を段階的に下げる","判断力 +1","eveinfo",{judgement:1}],
-      ["イリーナに正体を説明させる","情報解放","eveinfo",{}],
-      ["冷却系を優先する","安全側へ","eveinfo",{trust:1}],
-      ["装置に通信を試みる","大胆さ +1","eveinfo",{boldness:1}]
-    ]
+      ['通信を開く','怖がらせないように話す'],
+      ['名前を聞く','君は誰？'],
+      ['装置を調べる','記憶データの矛盾を探す'],
+      ['イリーナを見る','彼女は何を知っている？']
+    ], stat:{judgement:7,bold:4,trust:8}, next:5
   },
-  eveinfo:{
-    chapter:"CHAPTER 1",sub:"EVEの覚醒",day:"DAY 7　10:16",
-    name:"E-07",role:"PROJECT EVE",trust:0,aff:0,
-    speaker:"イリーナ", text:"「人工知能と生体組織の完全融合。」\n「PROJECT EVE。」\n\n装置はEmmaを知っている。\nそして、あなたの端末へ表示する。\n\nSTRATEGIST.\nI HAVE BEEN WAITING FOR YOU.",
+  {
+    speaker:'EVE', role:'技術解析アシスタント', trust:83, affection:80,
+    chapter:'CHAPTER 1', mission:'CORPORATE ROUTE', day:'DAY 6 / 11:18',
+    text:'「イヴ。……私、その名前が好き。」\n\n戦闘ではなく、所有権・警備・法務・記録を使って VANTA の突入を止めた。\n\nヴィクトリアから着信。彼女は、あなたが E-07 に名前をつけたことまで知っている。',
     choices:[
-      ["通信を開く","判断力 +1","eveopen",{judgement:1}],
-      ["まず安全条件を確認する","信頼 +1","eveopen",{trust:1}],
-      ["イリーナに詳細を聞く","追加情報","eveopen",{judgement:1}],
-      ["E-07へ名前を尋ねる","関係性イベント","eveopen",{trust:1}]
-    ]
+      ['ヴィクトリアと話す','彼女の情報量を確かめる'],
+      ['イヴを守る','会社の保護下に置く'],
+      ['イリーナを同行させる','彼女にも事情がある'],
+      ['全記録を保存する','今後の切り札になる']
+    ], stat:{judgement:7,bold:4,trust:8}, next:6
   },
-  eveopen:{
-    chapter:"CHAPTER 1",sub:"EVEの覚醒",day:"DAY 7　10:21",
-    name:"EVE",role:"PROJECT EVE / SUBJECT E-07",trust:22,aff:18,
-    speaker:"EVE", text:"「……やっと会えた。」\n\n白い髪の人造生命体がカプセルから出る。\n彼女は迷わず、あなたの袖を掴んだ。",
+  {
+    speaker:'EVE', role:'NOCTURNE MATERIALS / 仮採用', trust:91, affection:92,
+    chapter:'CHAPTER 1', mission:'新しい社員', day:'DAY 7 / 12:16',
+    text:'「私、NOCTURNEで働きたい。」\n\nあなたはヴィクトリアの許可を待たず、イヴを技術解析アシスタントとして採用した。\n\nその直後、ASTER DYNAMICS の株価が急落。4,000万円のSHORTは含み益 +710万円。',
     choices:[
-      ["『EVE』と名付ける","EVEの好感度上昇","corporate",{trust:1}],
-      ["まず体調を確認する","信頼 +1","corporate",{trust:1}],
-      ["どうして僕を知っている？","謎を掘る","corporate",{judgement:1}],
-      ["ここから出よう","大胆さ +1","corporate",{boldness:1}]
-    ]
+      ['SHORTを維持する','構造的な悪材料と判断'],
+      ['利益確定する','確実に資金を増やす'],
+      ['追加情報を集める','次のニュースを待つ'],
+      ['投資よりイヴを見る','まず新入社員の処遇だ']
+    ], stat:{judgement:7,bold:5,trust:8}, next:7
   },
-  corporate:{
-    chapter:"CHAPTER 1",sub:"Corporate Route",day:"DAY 7　10:29",
-    name:"エマ・ローレンス",role:"専属秘書",trust:34,aff:18,
-    speaker:"エマ", text:"「B4を含め、この建物はNOCTURNEの所有です。」\n\nVANTA部隊が接近。\nあなたは戦闘ではなく、法務・警備・所有権を使う。",
+  {
+    speaker:'エマ', role:'CEO室付 / 調査担当', trust:88, affection:68,
+    chapter:'CHAPTER 1', mission:'HELIOS', day:'DAY 7 / 12:47',
+    text:'「変なんです。毎月、同じ金額だけ買っています。」\n\n特殊セラミック部材。年間約4億8,000万円。売上0、使用0、在庫0。\n仕入先：HELIOS ADVANCED MATERIALS。\n\nイリーナはその名に反応し、イヴは呟いた。\n「そこ……NOCTURNEの会社だよ。」',
     choices:[
-      ["戦わない。逃げない。仕事をする。","判断力 +1 / 信頼 +1","victoria",{judgement:1,trust:1}],
-      ["警備会社を追加手配する","安全強化","victoria",{trust:1}],
-      ["アクセス権限を移管する","経営判断","victoria",{judgement:1}],
-      ["VANTAへ直接警告する","大胆さ +1","victoria",{boldness:1}]
-    ]
+      ['3人に調査を分担する','エマ＝取引、イリーナ＝VANTA、イヴ＝記憶。自分が統合する'],
+      ['ヴィクトリアへ直行','まずCEOに説明を求める'],
+      ['HELIOSを調べる','会社の正体から確認する'],
+      ['支払いを止める','資金流出を遮断する']
+    ], stat:{judgement:7,bold:5,trust:8}, next:8
   },
-  victoria:{
-    chapter:"CHAPTER 1",sub:"ヴィクトリアとの面会",day:"DAY 7　11:02",
-    name:"ヴィクトリア・クロウ",role:"NOCTURNE INDUSTRIES CEO",trust:30,aff:5,
-    speaker:"ヴィクトリア", text:"「あなたらしいわね、Strategist。」\n\nまだ報告していないはずのEVEの存在を、彼女は知っている。\n\nEVEは小さく言う。\n「この人も覚えてる。」",
-    choices:[
-      ["EVEに電話を渡す","記憶イベント","shopping",{trust:1}],
-      ["ヴィクトリアを問い詰める","大胆さ +1","shopping",{boldness:1}],
-      ["本社で直接話す","次へ","shopping",{}],
-      ["会社の再建報告を優先する","経営優先","shopping",{judgement:1}]
-    ]
-  },
-  shopping:{
-    chapter:"CHAPTER 1",sub:"EVEの採用",day:"DAY 7　12:28",
-    name:"EVE",role:"技術解析アシスタント候補",trust:41,aff:28,
-    speaker:"EVE", text:"「私、NOCTURNEで働きたい。」\n\nASTER DYNAMICSの株価は急落。\n4,000万円のSHORTは含み益 +620万円。",
-    choices:[
-      ["SHORT継続。EVEを採用する","大胆さ +1 / EVE正式加入","current",{boldness:1}],
-      ["利益確定してから採用する","堅実ルート","current",{}],
-      ["採用条件を提示する","信頼 +1","current",{trust:1}],
-      ["Victoriaへ確認を取る","経営判断","current",{judgement:1}]
-    ]
-  },
-  current:{
-    chapter:"CHAPTER 1",sub:"真実の欠片",day:"DAY 7　12:47",
-    name:"エマ・ローレンス",role:"専属秘書",trust:78,aff:42,
-    speaker:"エマ", text:"室長、NOCTURNE MATERIALSの経営データを調べていたら、かなり変な取引を見つけました。\n\nHELIOS ADVANCED MATERIALSへ年間約4.8億円。\n販売0、製造使用0、在庫0。",
-    choices:[
-      ["4人でタスクを分担する","チームで情報を収集する","ending",{trust:1}],
-      ["HELIOSについてさらに調べる","資金の流れを追跡する","ending",{judgement:1}],
-      ["EVEの記憶を掘り下げる","彼女の記憶の核心に迫る","ending",{trust:1}],
-      ["市場の動向をチェックする","ASTERを含む市場を分析する","ending",{judgement:1}]
-    ]
-  },
-  ending:{
-    chapter:"CHAPTER 1",sub:"調査の始まり",day:"DAY 7　12:52",
-    name:"TEAM NOCTURNE",role:"初のチーム指揮",trust:82,aff:45,
-    speaker:"System", text:"Emma：HELIOSの取引と承認記録。\nIrina：2049年製造とVANTA。\nEVE：HELIOSとNOCTURNEの記憶。\n\nStrategist：三つの情報を統合する。\n\nCONTINUE IN NEXT BUILD...",
-    end:true
+  {
+    speaker:'SYSTEM', role:'NOCTURNE INDUSTRIES', trust:100, affection:100,
+    chapter:'CHAPTER 1', mission:'CONTINUE...', day:'DAY 7 / 12:49',
+    text:'チームを三方向へ走らせ、あなたは断片を統合し始める。\n\nVictoriaとの会議まで、あとわずか。\n\n――NOCTURNE INDUSTRIES v0.2 UI Prototype / 現在のストーリー到達点――',
+    choices:[], stat:{judgement:7,bold:5,trust:8}, next:null
   }
+];
+
+let state = {
+  scene:0,
+  judgement:1,
+  bold:1,
+  trust:1,
+  funds:'2.8億円',
+  investment:'ASTER SHORT',
+  investmentSub:'4,000万円 / +710万円',
+  path:[]
 };
 
-let state={scene:"intro",judgement:3,boldness:3,trust:5,funds:"2.8",investment:"なし",path:""};
-
 function checkpoint(){
-  const inv = state.scene==="shopping"||state.scene==="current"||state.scene==="ending" ? "I3" : "I0";
-  const money = state.funds==="2.8" ? "M280" : "M"+state.funds.replace(".","");
-  return `NI-C1-${inv}B${state.boldness}T${state.trust}${money}-P${state.path||"0"}`;
-}
-function flash(msg){
-  const n=document.getElementById("notice");n.textContent=msg;n.style.display="block";
-  clearTimeout(window._noticeTimer);window._noticeTimer=setTimeout(()=>n.style.display="none",1600);
-}
-function applyDelta(d={}){
-  if(d.judgement)state.judgement+=d.judgement;
-  if(d.boldness)state.boldness+=d.boldness;
-  if(d.trust)state.trust+=d.trust;
-}
-function go(idx){
-  const s=scenes[state.scene],c=s.choices[idx];
-  state.path += String(idx+1);
-  applyDelta(c[3]||{});
-  state.scene=c[2];
-  if(state.scene==="shopping"||state.scene==="current"||state.scene==="ending"){
-    state.investment="ASTER SHORT 4,000万円";
-  }
-  render();
+  return `NI-WEB-C${Math.max(0,state.scene)}-J${state.judgement}B${state.bold}T${state.trust}-P${state.path.join('')||'0'}`;
 }
 function render(){
   const s=scenes[state.scene];
-  document.getElementById("chapterName").textContent=s.chapter;
-  document.getElementById("chapterSub").textContent=s.sub;
-  document.getElementById("dayText").textContent=s.day;
-  document.getElementById("judgement").textContent=state.judgement;
-  document.getElementById("boldness").textContent=state.boldness;
-  document.getElementById("trust").textContent=state.trust;
-  document.getElementById("funds").textContent=state.funds;
-  document.getElementById("investment").textContent=state.investment;
-  document.getElementById("code").textContent=checkpoint();
-
-  const game=document.getElementById("game");
-  if(s.end){
-    game.innerHTML=`<div class="end-screen"><h2>${s.sub}</h2><p style="white-space:pre-wrap">${s.text}</p></div>`;
-    return;
-  }
-  const trust=Math.max(0,Math.min(100,s.trust||0));
-  const aff=Math.max(0,Math.min(100,s.aff||0));
-  game.innerHTML=`
-    <div class="main">
-      <div class="character-side">
-        <aside class="char-panel">
-          <h2>${s.name}</h2>
+  document.getElementById('chapterText').textContent=s.chapter;
+  document.getElementById('missionText').textContent=s.mission;
+  document.getElementById('dayText').textContent=s.day;
+  const choices=s.choices.map((c,i)=>`
+    <button class="choice" onclick="choose(${i})">
+      <div class="choice-num">${i+1}</div>
+      <div class="choice-label">${c[0]}<small>${c[1]}</small></div>
+    </button>`).join('');
+  document.getElementById('game').innerHTML=`
+    <main class="main">
+      <section class="character-side">
+        <div class="char-panel">
+          <h2>${s.speaker}</h2>
           <div class="role">${s.role}</div>
-          <div class="meter-label"><span>信頼度</span><b>${trust}%</b></div>
-          <div class="meter"><i style="width:${trust}%"></i></div>
-          <div class="meter-label"><span>好感度 <span class="heart">♡</span></span><b>${aff}%</b></div>
-          <div class="meter"><i style="width:${aff}%;background:linear-gradient(90deg,#633c78,#cf75c6)"></i></div>
-        </aside>
+          <div class="meter-label"><span>信頼度</span><span>${s.trust}%</span></div>
+          <div class="meter"><i style="width:${s.trust}%"></i></div>
+          <div class="meter-label"><span>好感度 <span class="heart">♥</span></span><span>${s.affection}%</span></div>
+          <div class="meter"><i style="width:${s.affection}%"></i></div>
+        </div>
         <div class="hero-space"><div class="hero-portrait"></div></div>
-      </div>
-      <div class="story-side">
-        <section class="dialogue">
-          <div class="speaker">${s.speaker}</div>
+      </section>
+      <section class="story-side">
+        <div class="dialogue">
+          <div class="speaker">${s.speaker} <span style="float:right;color:#8f8c85;font-size:14px">◖)))</span></div>
           <div class="dialogue-text">${s.text}</div>
-        </section>
-        <section class="choices">
-          ${s.choices.map((c,i)=>`
-            <button class="choice ${i===0?'active':''}" data-i="${i}">
-              <span class="choice-num">${i+1}</span>
-              <span class="choice-label">${c[0]}<small>${c[1]||""}</small></span>
-            </button>`).join("")}
-        </section>
+        </div>
+        ${s.choices.length?`<div class="choices">${choices}</div>`:`<div class="end-screen"><h2>CONTINUE...</h2><p>物語はここから続きます。<br>開発版の現在地点です。</p><button class="top-btn" onclick="restart()">最初から</button></div>`}
+      </section>
+    </main>
+    <footer class="bottom">
+      <div class="bottom-card">
+        <div class="section-title">PARAMETER</div>
+        <div class="params">
+          <div class="param"><div class="ico">◉</div><div class="lab">判断力</div><div class="val">${s.stat.judgement}</div></div>
+          <div class="param"><div class="ico">♞</div><div class="lab">大胆さ</div><div class="val">${s.stat.bold}</div></div>
+          <div class="param"><div class="ico">♜</div><div class="lab">信頼度</div><div class="val">${s.stat.trust}</div></div>
+        </div>
       </div>
-    </div>`;
-  game.querySelectorAll(".choice").forEach(btn=>btn.addEventListener("click",()=>go(Number(btn.dataset.i))));
+      <div class="bottom-card finance">
+        <div><div class="label">FUNDS</div><div class="big">${state.funds}</div><div class="sub">利用可能資金</div></div>
+        <div><div class="label">INVESTMENT</div><div class="big" style="font-size:27px">${state.scene>=6?state.investment:'—'}</div><div class="sub">${state.scene>=6?state.investmentSub:'ポジションなし'}</div></div>
+      </div>
+      <div class="bottom-card checkpoint">
+        <div class="section-title">CHECKPOINT</div>
+        <p>このコードは、このブラウザ版で進行位置を確認するための簡易コードです。</p>
+        <div class="codebox"><span id="cpcode">${checkpoint()}</span><button class="copy" onclick="copyCheckpoint()">▣</button></div>
+      </div>
+    </footer>`;
 }
-document.getElementById("logBtn").addEventListener("click",()=>flash("LOGはUI優先の仮ボタンです"));
-document.getElementById("menuBtn").addEventListener("click",()=>flash("MENUは次版で実装予定です"));
-document.getElementById("copyBtn").addEventListener("click",async()=>{
-  const t=document.getElementById("code").textContent;
-  try{await navigator.clipboard.writeText(t);flash("CHECKPOINTをコピーしました")}catch(e){flash("コピー機能はブラウザ環境により使用できません")}
-});
-render();
+
+function choose(i){
+  const s=scenes[state.scene];
+  state.path.push(i+1);
+  if(s.next!==null){
+    state.scene=s.next;
+    const n=scenes[state.scene];
+    state.judgement=n.stat.judgement;state.bold=n.stat.bold;state.trust=n.stat.trust;
+  }
+  save();
+  window.scrollTo({top:0,behavior:'smooth'});
+  render();
+}
+function save(){ localStorage.setItem('nocturne_v02',JSON.stringify(state)); }
+function load(){
+  const x=localStorage.getItem('nocturne_v02');
+  if(x){ try{state={...state,...JSON.parse(x)}}catch(e){} }
+  render();
+}
+function restart(){
+  if(confirm('最初からやり直しますか？')){
+    localStorage.removeItem('nocturne_v02');
+    state={scene:0,judgement:1,bold:1,trust:1,funds:'2.8億円',investment:'ASTER SHORT',investmentSub:'4,000万円 / +710万円',path:[]};
+    render();window.scrollTo(0,0);
+  }
+}
+function showNotice(t){
+  const n=document.getElementById('notice');n.textContent=t;n.style.display='block';
+  clearTimeout(window._nt);window._nt=setTimeout(()=>n.style.display='none',1700);
+}
+async function copyCheckpoint(){
+  const t=document.getElementById('cpcode').textContent;
+  try{await navigator.clipboard.writeText(t);showNotice('CHECKPOINTをコピーしました')}catch(e){showNotice(t)}
+}
+load();
 </script>
 </body>
 </html>
