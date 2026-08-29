@@ -27,16 +27,31 @@ jobs:
           file assets/scene_002_emma.webp
           echo "dcbcbef8a999a53453cd362e041abe5d6fc1b65b53f4a20d88bc5dbae768bb2f  assets/scene_002_emma.webp" | sha256sum -c -
 
-      - name: Commit rebuilt image
+      - name: Use Emma CG only in Scene 002
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          marker='scene2-emma-bg-patch'
+          if marker not in s:
+              patch='''\n<script id="scene2-emma-bg-patch">\n(function(){\n  const oldRender = window.render;\n  function applySceneBackground(){\n    const el=document.querySelector('.screen');\n    if(!el) return;\n    const sceneNo=(typeof st!==\"undefined\" && st.scene)?st.scene:1;\n    el.style.backgroundImage = sceneNo===2\n      ? \"url('assets/scene_002_emma.webp')\"\n      : \"url('assets/scene_001_victoria.webp')\";\n  }\n  if(typeof oldRender==='function'){\n    window.render=function(){ oldRender(); applySceneBackground(); };\n  }\n  applySceneBackground();\n})();\n</script>\n'''
+              s=s.replace('</body>',patch+'</body>')
+              p.write_text(s)
+          PY
+
+      - name: Commit rebuilt image and Scene 002 integration
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add assets/scene_002_emma.webp
+          git add assets/scene_002_emma.webp index.html
           if git diff --cached --quiet; then
-            echo 'No image change.'
+            echo 'No image or HTML change.'
             exit 0
           fi
-          git commit -m 'Rebuild verified Scene 002 Emma CG'
+          git commit -m 'Use verified Emma CG in Scene 002'
           git push
