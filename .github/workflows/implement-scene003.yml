@@ -1,0 +1,51 @@
+name: Implement Scene 003
+on:
+  push:
+    paths:
+      - '.github/workflows/implement-scene003.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Implement Scene 003
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          # Extend currentPages so Scene 003 is playable instead of completion-only.
+          s=s.replace("function currentPages(){return st.scene===1?scene1:scene2()}", "function scene3(){const route=st.choice2||1;const intro={1:[{sp:'エマ・ローレンス',tx:'「分かりました。まず数字から見ましょう。」\\n\\nエマは会議室の大型ディスプレイに三つの資料を並べる。\\n\\n損益。受注。工場在庫。\\n\\n一見すると、どれも説明可能な範囲に見えた。'},{sp:'SYSTEM',tx:'だが、月次推移を重ねた瞬間、一つだけ奇妙な線が浮かぶ。\\n\\n売上が落ちた月にも、原材料の購入額だけがほとんど下がっていない。'},{sp:'エマ・ローレンス',tx:'「……これ、変ですね。」\\n\\n彼女は画面を拡大する。\\n\\n「仕入先コード H-17。過去12か月で4.8億円。」\\n\\n「でも、この材料を使った製品の売上記録が見当たりません。」'}],2:[{sp:'エマ・ローレンス',tx:'「分かりました。工場へ行きましょう。」\\n\\n車で約40分。NOCTURNE MATERIALSの工場は、湾岸の古い工業地帯にあった。'},{sp:'SYSTEM',tx:'エマが事前連絡を入れようとする。\\n\\nあなたはそれを止めず、現場へ入る。\\n\\n製造ラインは動いている。だが倉庫の一角だけ、不自然に新しい電子錠で閉じられていた。'},{sp:'エマ・ローレンス',tx:'「この区画……通常の在庫マップにはありません。」\\n\\n端末を確認した彼女の声が少し低くなる。\\n\\n「登録上は、空きスペースです。」'}],3:[{sp:'エマ・ローレンス',tx:'「主要顧客ですね。契約更新まで21日です。」\\n\\nエマは顧客別の売上推移を開く。\\n\\n最大顧客の発注量は確かに落ちている。だが、理由は価格でも品質でもなかった。'},{sp:'SYSTEM',tx:'更新交渉の議事録。\\n\\nそこには、NOCTURNE MATERIALS側から提出された覚えのない新製品コードが記載されていた。\\n\\nNM-X17。'},{sp:'エマ・ローレンス',tx:'「この製品……社内の商品マスタにありません。」\\n\\n「なのに顧客は、三か月前にサンプルを受け取ったことになっています。」'}],4:[{sp:'エマ・ローレンス',tx:'「予告なし、ですか？」\\n\\n一瞬だけ驚いたあと、エマは楽しそうに口元を緩める。\\n\\n「……分かりました。私、そういうの嫌いじゃないです。」'},{sp:'SYSTEM',tx:'40分後。あなたとエマはNOCTURNE MATERIALSへ入る。\\n\\n突然現れた本社の新任責任者に、オフィスの空気がわずかに固まった。\\n\\nその瞬間、一人の社員が机の上の書類を伏せる。'},{sp:'エマ・ローレンス',tx:'エマがあなたにだけ聞こえる声で囁く。\\n\\n「今、隠しましたね。」\\n\\n伏せられた紙の端には、見慣れない文字があった。\\n\\n――PROJECT H-17。'}]}[route];return intro.concat([{sp:'エマ・ローレンス',tx:'「どうしますか？」',choices:[['H-17を追う','まず異常の中心を特定する。','判断力 UP'],['エマに裏取りを任せる','表に出ず情報を集める。','信頼 UP'],['責任者を直接呼ぶ','今ここで説明を求める。','大胆さ UP'],['いったん通常業務を見る','相手に警戒させず全体像を掴む。','判断力 UP']]}])}function currentPages(){return st.scene===1?scene1:st.scene===2?scene2():scene3()}")
+          # Scene metadata / character / background.
+          s=s.replace("return['SCENE 003','NEXT UPDATE','—']", "if(st.scene===3)return['SCENE 003','最初の違和感','DAY 1 / 10:18'];return['SCENE 004','NEXT UPDATE','—']")
+          s=s.replace("function character(){if(st.scene===2&&st.page>=2)return['エマ・ローレンス','NOCTURNE INDUSTRIES / EXECUTIVE ASSISTANT'];return['ヴィクトリア・クロウ','NOCTURNE INDUSTRIES CEO']}", "function character(){if(st.scene===3||st.scene===2&&st.page>=2)return['エマ・ローレンス','NOCTURNE INDUSTRIES / EXECUTIVE ASSISTANT'];return['ヴィクトリア・クロウ','NOCTURNE INDUSTRIES CEO']}")
+          # Remove old Scene 3 completion guard.
+          start="if(st.scene===3){document.getElementById('game').innerHTML=`<main class=\"screen\" style=\"--scene-bg:url('assets/scene_002_emma.webp')\"><section class=\"visual\"></section><section class=\"dialogue\"><div class=\"complete\"><h3>SCENE 002 COMPLETE</h3><p>最初の調査方針を記録しました。<br>SCENE 003は、この選択から続きます。</p></div></section>${hud()}</main>`;return}"
+          s=s.replace(start,'')
+          # Scene 003 uses Emma image for now; scene-specific CG will be added next without blocking gameplay.
+          s=s.replace("function bg(){return st.scene===1?\"url('assets/scene_001_victoria.webp')\":\"url('assets/scene_002_emma.webp')\"}", "function bg(){return st.scene===1?\"url('assets/scene_001_victoria.webp')\":\"url('assets/scene_002_emma.webp')\"}")
+          # Extend choice handler: Scene 003 -> Scene 4 checkpoint.
+          old="else if(st.scene===2){st.choice2=n;if(n===1||n===3)st.j++;if(n===2)st.t++;if(n===4)st.b++;st.scene=3;st.page=0}save();render();updateContinue()"
+          new="else if(st.scene===2){st.choice2=n;if(n===1||n===3)st.j++;if(n===2)st.t++;if(n===4)st.b++;st.scene=3;st.page=0}else if(st.scene===3){st.choice3=n;if(n===1||n===4)st.j++;if(n===2)st.t++;if(n===3)st.b++;st.scene=4;st.page=0}save();render();updateContinue()"
+          s=s.replace(old,new)
+          # Completion display for Scene 004 checkpoint via render guard.
+          needle="function render(){let info=sceneInfo();document.getElementById('meta').innerHTML=`<b>${info[0]}</b><span>${info[1]}</span><small>${info[2]}</small>`;"
+          repl=needle+"if(st.scene===4){document.getElementById('game').innerHTML=`<main class=\"screen\" style=\"--scene-bg:url('assets/scene_002_emma.webp')\"><section class=\"visual\"></section><section class=\"dialogue\"><div class=\"complete\"><h3>SCENE 003 COMPLETE</h3><p>最初の違和感への対応を記録しました。<br>次のシーンは、この判断から続きます。</p></div></section>${hud()}</main>`;return}"
+          s=s.replace(needle,repl)
+          # Update continue label.
+          s=s.replace("x.scene===3?'SCENE 002 COMPLETE':`SCENE 00${x.scene} / PAGE ${x.page+1}`", "x.scene===4?'SCENE 003 COMPLETE':`SCENE 00${x.scene} / PAGE ${x.page+1}`")
+          # Existing presentation patch must not force Emma image for all Scene 3 states incorrectly; Emma is desired for 2 after entrance and all 3.
+          s=s.replace("const showEmma = sceneNo===2 && pageNo>=2;", "const showEmma = (sceneNo===2 && pageNo>=2) || sceneNo===3 || sceneNo===4;")
+          p.write_text(s)
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Implement Scene 003 with investigation branches'
+          git push
