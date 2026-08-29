@@ -1,8 +1,5 @@
 name: Wire Scene 003 CG
-on:
-  push:
-    paths:
-      - '.github/workflows/use-scene003-cg.yml'
+on: [push]
 permissions:
   contents: write
 jobs:
@@ -14,36 +11,13 @@ jobs:
           fetch-depth: 0
       - name: Patch Scene 003 background
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('index.html')
-          s=p.read_text()
-          old='''    const sceneNo=(typeof st!=="undefined" && st.scene)?st.scene:1;
-    const emmaVisible = sceneNo===2 && typeof st!=="undefined" && st.page>=2;
-    el.style.backgroundImage = emmaVisible
-      ? "url('assets/scene_002_emma.webp')"
-      : "url('assets/scene_001_victoria.webp')";
-    if(emmaVisible){'''
-          new='''    const sceneNo=(typeof st!=="undefined" && st.scene)?st.scene:1;
-    const emmaVisible = sceneNo===2 && typeof st!=="undefined" && st.page>=2;
-    const investigationVisible = sceneNo===3 || sceneNo===4;
-    el.style.backgroundImage = investigationVisible
-      ? "url('assets/scene_003_investigation.webp')"
-      : emmaVisible
-        ? "url('assets/scene_002_emma.webp')"
-        : "url('assets/scene_001_victoria.webp')";
-    if(emmaVisible || investigationVisible){'''
-          if old not in s:
-              raise SystemExit('Scene background patch target not found')
-          s=s.replace(old,new,1)
-          # Scene 003 completion should also retain its investigation CG before the override runs.
-          s=s.replace("style=\"--scene-bg:url('assets/scene_002_emma.webp')\"><section class=\"visual\"></section><section class=\"dialogue\"><div class=\"complete\"><h3>SCENE 003 COMPLETE</h3>", "style=\"--scene-bg:url('assets/scene_003_investigation.webp')\"><section class=\"visual\"></section><section class=\"dialogue\"><div class=\"complete\"><h3>SCENE 003 COMPLETE</h3>",1)
-          p.write_text(s)
-          PY
-      - name: Commit
+          echo 'ZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCnA9UGF0aCgiaW5kZXguaHRtbCIpCnM9cC5yZWFkX3RleHQoKQpvbGQ9IiIiICAgIGNvbnN0IHNjZW5lTm89KHR5cGVvZiBzdCE9XCJ1bmRlZmluZWRcIiAmJiBzdC5zY2VuZSk/c3Quc2NlbmU6MTsKICAgIGNvbnN0IGVtbWFWaXNpYmxlID0gc2NlbmVObz09PTIgJiYgdHlwZW9mIHN0IT09XCJ1bmRlZmluZWRcIiAmJiBzdC5wYWdlPj0yOwogICAgZWwuc3R5bGUuYmFja2dyb3VuZEltYWdlID0gZW1tYVZpc2libGUKICAgICAgPyBcInVybCgnYXNzZXRzL3NjZW5lXzAwMl9lbW1hLndlYnAnKVwiCiAgICAgIDogXCJ1cmwoJ2Fzc2V0cy9zY2VuZV8wMDFfdmljdG9yaWEud2VicCcpXCI7CiAgICBpZihlbW1hVmlzaWJsZSl7IiIiCm5ldz0iIiIgICAgY29uc3Qgc2NlbmVObz0odHlwZW9mIHN0IT09XCJ1bmRlZmluZWRcIiAmJiBzdC5zY2VuZSk/c3Quc2NlbmU6MTsKICAgIGNvbnN0IGVtbWFWaXNpYmxlID0gc2NlbmVObz09PTIgJiYgdHlwZW9mIHN0IT09XCJ1bmRlZmluZWRcIiAmJiBzdC5wYWdlPj0yOwogICAgY29uc3QgaW52ZXN0aWdhdGlvblZpc2libGUgPSBzY2VuZU5vPT09MyB8fCBzY2VuZU5vPT09NDsKICAgIGVsLnN0eWxlLmJhY2tncm91bmRJbWFnZSA9IGludmVzdGlnYXRpb25WaXNpYmxlCiAgICAgID8gXCJ1cmwoJ2Fzc2V0cy9zY2VuZV8wMDNfaW52ZXN0aWdhdGlvbi53ZWJwJylcIgogICAgICA6IGVtbWFWaXNpYmxlCiAgICAgICAgPyBcInVybCgnYXNzZXRzL3NjZW5lXzAwMl9lbW1hLndlYnAnKVwiCiAgICAgICAgOiBcInVybCgnYXNzZXRzL3NjZW5lXzAwMV92aWN0b3JpYS53ZWJwJylcIjsKICAgIGlmKGVtbWFWaXNpYmxlIHx8IGludmVzdGlnYXRpb25WaXNpYmxlKXsiIiIKaWYgb2xkIG5vdCBpbiBzOgogICAgcmFpc2UgU3lzdGVtRXhpdCgiYmFja2dyb3VuZCB0YXJnZXQgbm90IGZvdW5kIikKcz1zLnJlcGxhY2Uob2xkLG5ldyw xKQpzPXMucmVwbGFjZSgic3R5bGU9XFwiLS1zY2VuZS1iZzp1cmwoJ2Fzc2V0cy9zY2VuZV8wMDJfZW1tYS53ZWJwJylcIj48c2VjdGlvbiBjbGFzcz1cInZpc3VhbFwiPjwvc2VjdGlvbj48c2VjdGlvbiBjbGFzcz1cImRpYWxvZ3VlXCI+PGRpdiBjbGFzcz1cImNvbXBsZXRlXCI+PGgzPlNDRU5FIDAwMyBDT01QTEVURTwvaDM+IiwKICAgICAgICAgICAgInN0eWxlPVwiLS1zY2VuZS1iZzp1cmwoJ2Fzc2V0cy9zY2VuZV8wMDNfaW52ZXN0aWdhdGlvbi53ZWJwJylcIj48c2VjdGlvbiBjbGFzcz1cInZpc3VhbFwiPjwvc2VjdGlvbj48c2VjdGlvbiBjbGFzcz1cImRpYWxvZ3VlXCI+PGRpdiBjbGFzcz1cImNvbXBsZXRlXCI+PGgzPlNDRU5FIDAwMyBDT01QTEVURTwvaDM+IiwxKQpwLndyaXRlX3RleHQocykK'.replace(' ','') | base64 -d > /tmp/patch.py
+          python3 /tmp/patch.py
+      - name: Commit changes
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
+          git diff --cached --quiet && exit 0
           git commit -m 'Use investigation CG in Scene 003'
           git push
