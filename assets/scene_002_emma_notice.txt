@@ -1,0 +1,1 @@
+Scene 002 should use assets/scene_002_emma.webp once the binary reconstruction workflow completes.
