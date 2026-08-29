@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/rebuild-scene001-cg.yml'
-      - 'assets/chunks/scene_001_victoria_official/**'
+      - 'assets/chunks/scene_001_victoria_official_bin/**'
 
 permissions:
   contents: write
@@ -17,14 +17,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Rebuild official WebP from transferred payload
+      - name: Rebuild and verify official WebP
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p assets
-          base64 --decode assets/chunks/scene_001_victoria_official/scene_001_victoria.b64 > assets/scene_001_victoria.webp
+          cat assets/chunks/scene_001_victoria_official_bin/part-*.bin > assets/scene_001_victoria.webp
+          test "$(wc -c < assets/scene_001_victoria.webp)" -eq 66946
           file assets/scene_001_victoria.webp
-          test -s assets/scene_001_victoria.webp
+          echo "4c2b0a23751d5f236caf2ba131fbbe358fb69c0f850fb6b1035553ceb2066260  assets/scene_001_victoria.webp" | sha256sum -c -
 
       - name: Commit rebuilt image
         shell: bash
@@ -37,5 +38,5 @@ jobs:
             echo 'No image change.'
             exit 0
           fi
-          git commit -m 'Rebuild official Scene 001 Victoria CG'
+          git commit -m 'Rebuild verified Scene 001 Victoria CG'
           git push
