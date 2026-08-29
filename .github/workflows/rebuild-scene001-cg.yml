@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/rebuild-scene001-cg.yml'
-      - 'assets/chunks/scene_001_victoria/**'
+      - 'assets/chunks/binary_test/**'
 
 permissions:
   contents: write
@@ -17,17 +17,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Rebuild WebP from Base64 chunks
+      - name: Rebuild WebP from binary chunks
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p assets
-          cat assets/chunks/scene_001_victoria/part-*.b64 \
-            | tr -d '\n\r\t ' \
-            | base64 --decode \
-            > assets/scene_001_victoria.webp
-          file assets/scene_001_victoria.webp
-          test -s assets/scene_001_victoria.webp
+          cat assets/chunks/binary_test/part-*.bin > assets/scene_001_victoria_split_test.webp
+          file assets/scene_001_victoria_split_test.webp
+          test -s assets/scene_001_victoria_split_test.webp
 
       - name: Commit rebuilt image
         shell: bash
@@ -35,10 +32,10 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add assets/scene_001_victoria.webp
+          git add assets/scene_001_victoria_split_test.webp
           if git diff --cached --quiet; then
             echo 'No image change.'
             exit 0
           fi
-          git commit -m 'Rebuild Scene 001 Victoria CG'
+          git commit -m 'Rebuild Scene 001 Victoria CG from binary chunks'
           git push
