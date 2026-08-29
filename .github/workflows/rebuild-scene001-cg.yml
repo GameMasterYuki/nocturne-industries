@@ -1,0 +1,44 @@
+name: Rebuild Scene 001 CG
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/rebuild-scene001-cg.yml'
+      - 'assets/chunks/scene_001_victoria/**'
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Rebuild WebP from Base64 chunks
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets
+          cat assets/chunks/scene_001_victoria/part-*.b64 \
+            | tr -d '\n\r\t ' \
+            | base64 --decode \
+            > assets/scene_001_victoria.webp
+          file assets/scene_001_victoria.webp
+          test -s assets/scene_001_victoria.webp
+
+      - name: Commit rebuilt image
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/scene_001_victoria.webp
+          if git diff --cached --quiet; then
+            echo 'No image change.'
+            exit 0
+          fi
+          git commit -m 'Rebuild Scene 001 Victoria CG'
+          git push
