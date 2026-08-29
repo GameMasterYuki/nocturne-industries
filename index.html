@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>NOCTURNE INDUSTRIES v0.2 UI Prototype</title>
+<style>
+:root{
+  --bg:#05070b;
+  --panel:#0a0d13e8;
+  --panel-solid:#0b0e14;
+  --panel-2:#10131b;
+  --line:#8f7554;
+  --line-soft:#3d3428;
+  --text:#f2eee5;
+  --muted:#a6a4a0;
+  --gold:#c7a66f;
+  --gold2:#8e7552;
+  --violet:#a77bd8;
+  --violet2:#5d3a86;
+  --blue:#7987ff;
+  --red:#d26d6d;
+  --green:#7acb9c;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#040509;color:var(--text);font-family:Georgia,"Times New Roman","Yu Mincho","Hiragino Mincho ProN",serif}
+body{
+  background:
+    radial-gradient(circle at 50% -20%,rgba(62,48,35,.23),transparent 35%),
+    linear-gradient(180deg,#080a10,#020306 74%);
+}
+button{font:inherit;color:inherit}
+#app{max-width:1536px;margin:0 auto;min-height:100vh;background:#05070a}
+.topbar{
+  min-height:76px;display:grid;grid-template-columns:270px 1fr auto;align-items:stretch;
+  background:linear-gradient(180deg,#0b0f17,#05070b);
+  border-bottom:1px solid #3a2f22;
+}
+.logo{
+  position:relative;display:flex;align-items:center;gap:14px;padding:0 22px;
+  border-right:1px solid #3c3328;
+  clip-path:polygon(0 0,93% 0,100% 50%,93% 100%,0 100%);
+  background:linear-gradient(90deg,#0d1119,#11151e);
+}
+.logo-mark{font-size:34px;color:var(--gold);line-height:1}
+.logo-copy{letter-spacing:.08em}
+.logo-copy b{display:block;font-size:21px;font-weight:500}
+.logo-copy span{display:block;font-size:9px;letter-spacing:.34em;color:#c7c1b6;margin-top:3px}
+.chapter{
+  display:flex;align-items:center;gap:24px;padding:0 28px;font-size:18px;color:#e7e0d4;
+}
+.chapter strong{font-weight:500}
+.chapter small{font-size:13px;color:#a99f91}
+.top-actions{display:flex;align-items:center;gap:12px;padding:0 18px}
+.top-btn{
+  min-width:100px;height:42px;border:1px solid #69583f;background:#0e1118;
+  border-radius:2px;letter-spacing:.08em;cursor:pointer;
+}
+.top-btn:hover{background:#171b25;border-color:var(--gold)}
+
+.main{
+  display:grid;grid-template-columns: 57% 43%;min-height:670px;
+  background:
+    linear-gradient(90deg,rgba(2,3,6,.07),rgba(2,3,6,.18)),
+    url("scene_2.png") center/cover no-repeat;
+  position:relative;
+}
+.main:before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(3,5,8,.08) 0%,rgba(3,5,8,.12) 48%,rgba(3,5,8,.65) 63%,rgba(3,5,8,.9) 100%);
+  pointer-events:none;
+}
+.character-side,.story-side{position:relative;z-index:1;min-width:0}
+.character-side{
+  display:grid;grid-template-columns:260px 1fr;align-items:stretch;
+}
+.char-panel{
+  margin:26px 0 26px 18px;align-self:start;
+  border:1px solid #6f5e46;
+  background:linear-gradient(180deg,rgba(8,10,15,.94),rgba(9,11,16,.82));
+  padding:25px 28px 28px;
+  min-height:250px;
+  box-shadow:inset 0 0 0 1px rgba(199,166,111,.08);
+}
+.char-panel h2{font-size:27px;margin:0 0 8px;font-weight:500}
+.char-panel .role{font-size:15px;margin-bottom:28px}
+.meter-label{display:flex;justify-content:space-between;font-size:14px;margin-top:18px}
+.meter{height:7px;background:#161921;border:1px solid #363c49;margin-top:7px;overflow:hidden}
+.meter>i{display:block;height:100%;background:linear-gradient(90deg,var(--violet2),var(--violet))}
+.heart{color:#d47dd7}
+.hero-space{
+  min-height:650px;display:flex;align-items:flex-end;justify-content:center;padding:0 12px 0 0;
+}
+.hero-portrait{
+  width:min(490px,100%);height:610px;align-self:end;
+  background:
+    linear-gradient(to top,rgba(4,5,8,.25),transparent 35%),
+    url("scene_2.png") 20% center/auto 100% no-repeat;
+  filter:saturate(.9) contrast(1.02);
+  mask-image:linear-gradient(to right,transparent 0%,#000 16%,#000 84%,transparent 100%);
+  opacity:.93;
+}
+.story-side{
+  padding:24px 18px 24px 4px;
+  display:flex;flex-direction:column;gap:14px;
+}
+.dialogue{
+  min-height:335px;padding:28px 30px;
+  border:1px solid #6a5a45;
+  background:linear-gradient(180deg,rgba(8,10,15,.88),rgba(8,10,15,.76));
+  box-shadow:inset 0 0 0 1px rgba(199,166,111,.08);
+  backdrop-filter:blur(4px);
+}
+.speaker{font-size:21px;color:var(--violet);margin-bottom:22px;font-weight:600}
+.dialogue-text{font-size:20px;line-height:1.9;white-space:pre-wrap}
+.choices{display:grid;gap:12px}
+.choice{
+  position:relative;display:grid;grid-template-columns:66px 1fr;align-items:center;
+  min-height:65px;width:100%;text-align:left;border:1px solid #6d604e;background:rgba(8,10,15,.92);cursor:pointer;
+}
+.choice-num{
+  display:flex;align-items:center;justify-content:center;height:100%;
+  font-size:29px;border-right:1px solid #4e4336;color:#e7dfd3;
+}
+.choice-label{padding:10px 20px;font-size:19px}
+.choice small{display:block;color:#8e8b86;font-size:12px;margin-top:4px}
+.choice:hover,.choice.active{
+  border-color:#b995d1;background:linear-gradient(90deg,rgba(66,37,88,.72),rgba(29,22,38,.9));
+  box-shadow:0 0 0 1px rgba(167,123,216,.24),0 0 18px rgba(96,55,131,.25) inset;
+}
+.choice:hover .choice-num,.choice.active .choice-num{color:#dfc9f3}
+
+.bottom{
+  display:grid;grid-template-columns:32% 31% 37%;min-height:180px;
+  border-top:1px solid #5c4e3a;background:linear-gradient(180deg,#0c0f16,#07090d);
+}
+.bottom-card{padding:24px 28px;border-right:1px solid #40372a;position:relative}
+.bottom-card:last-child{border-right:0}
+.section-title{font-size:16px;color:#b896d3;letter-spacing:.05em;margin-bottom:20px}
+.params{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.param{text-align:center;border-right:1px solid #2a2e37}
+.param:last-child{border-right:0}
+.param .ico{font-size:25px;margin-bottom:3px}
+.param .lab{font-size:16px}
+.param .val{font-size:31px;color:#e6c47f;margin-top:3px}
+.finance{display:grid;grid-template-columns:1fr 1fr;height:100%}
+.finance>div{padding:0 22px;border-right:1px solid #363024}
+.finance>div:last-child{border-right:0}
+.finance .label{font-size:16px;color:#d5bd89;margin-bottom:18px}
+.finance .big{font-size:40px}
+.finance .sub{font-size:17px;margin-top:5px}
+.checkpoint p{font-size:13px;line-height:1.6;color:#d6d1c8;margin:0 0 10px}
+.codebox{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 13px;background:#0a0c11;border:1px solid #5c5041;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
+.copy{border:0;background:transparent;color:#ccc;cursor:pointer;font-size:18px}
+
+.floating-status{
+  display:none;
+}
+.notice{
+  position:fixed;top:90px;left:50%;transform:translateX(-50%);
+  z-index:10;background:#0b0e14;border:1px solid #8e7552;padding:10px 16px;
+  display:none;
+}
+.end-screen{
+  min-height:520px;padding:70px 30px;text-align:center;background:linear-gradient(180deg,#0d1018,#06070b);
+}
+.end-screen h2{font-size:34px;color:#d1b482;font-weight:500}
+.end-screen p{font-size:18px;line-height:1.9;color:#d9d5cd}
+
+@media(max-width:1050px){
+  .topbar{grid-template-columns:220px 1fr}
+  .top-actions{grid-column:1/-1;justify-content:flex-end;padding:10px 14px;border-top:1px solid #252a33}
+  .main{grid-template-columns:1fr;background-position:center}
+  .main:before{background:linear-gradient(90deg,rgba(3,5,8,.25),rgba(3,5,8,.6))}
+  .character-side{min-height:520px}
+  .story-side{padding:10px 14px 22px}
+  .bottom{grid-template-columns:1fr 1fr}
+  .checkpoint{grid-column:1/-1}
+}
+@media(max-width:720px){
+  .logo{clip-path:none;border-right:0}.topbar{grid-template-columns:1fr}
+  .chapter{padding:14px 18px;border-top:1px solid #262b34}
+  .top-actions{justify-content:stretch}.top-btn{flex:1;min-width:0}
+  .character-side{grid-template-columns:1fr;min-height:470px}
+  .char-panel{margin:14px;max-width:310px}
+  .hero-space{display:none}
+  .main{background-position:23% center}
+  .story-side{margin-top:-70px}
+  .dialogue{min-height:auto;padding:20px}
+  .dialogue-text{font-size:17px}
+  .choice{grid-template-columns:52px 1fr}.choice-label{font-size:16px;padding:10px 13px}
+  .bottom{grid-template-columns:1fr}.bottom-card{border-right:0;border-bottom:1px solid #393126}
+  .checkpoint{grid-column:auto}
+  .params .lab{font-size:14px}.param .val{font-size:25px}
+}
+</style>
+
+<style id="macbook14-fit">
+/* v0.2.1 — 14-inch MacBook Pro viewport optimization.
+   Goal: keep the complete game dashboard visible without page scrolling
+   at common scaled browser heights (~780–900 CSS px). */
+@media (min-width:1051px){
+  html,body{height:100%;overflow:hidden}
+  #app{
+    height:100vh;
+    min-height:0;
+    display:grid;
+    grid-template-rows:clamp(58px,7.2vh,72px) minmax(0,1fr) clamp(138px,18vh,168px);
+    overflow:hidden;
+  }
+  .topbar{
+    min-height:0;
+    height:100%;
+    grid-template-columns:250px 1fr auto;
+  }
+  .logo{padding:0 18px}
+  .logo-mark{font-size:29px}
+  .logo-copy b{font-size:18px}
+  .chapter{gap:18px;padding:0 22px;font-size:16px}
+  .top-actions{padding:0 14px;gap:9px}
+  .top-btn{height:36px;min-width:88px;font-size:14px}
+
+  #game{min-height:0;overflow:hidden}
+  .main{
+    height:100%;
+    min-height:0;
+    grid-template-columns:57% 43%;
+    overflow:hidden;
+  }
+  .character-side{min-height:0;height:100%}
+  .char-panel{
+    margin:16px 0 16px 14px;
+    padding:18px 22px 20px;
+    min-height:0;
+  }
+  .char-panel h2{font-size:23px;margin-bottom:5px}
+  .char-panel .role{font-size:13px;margin-bottom:16px}
+  .meter-label{font-size:12px;margin-top:12px}
+  .meter{height:6px;margin-top:5px}
+  .hero-space{min-height:0;height:100%;padding:0}
+  .hero-portrait{height:100%;max-height:610px}
+
+  .story-side{
+    min-height:0;height:100%;
+    padding:14px 14px 14px 4px;
+    gap:9px;
+    display:grid;
+    grid-template-rows:minmax(0,1fr) auto;
+  }
+  .dialogue{
+    min-height:0;
+    padding:19px 24px;
+    overflow:auto;
+  }
+  .speaker{font-size:18px;margin-bottom:12px}
+  .dialogue-text{font-size:clamp(15px,1.22vw,18px);line-height:1.65}
+  .choices{gap:7px}
+  .choice{
+    min-height:clamp(48px,6vh,58px);
+    grid-template-columns:55px 1fr;
+  }
+  .choice-num{font-size:23px}
+  .choice-label{padding:7px 15px;font-size:clamp(14px,1.12vw,17px)}
+  .choice small{font-size:10px;margin-top:2px}
+
+  .bottom{
+    min-height:0;height:100%;
+    grid-template-columns:32% 31% 37%;
+    overflow:hidden;
+  }
+  .bottom-card{padding:14px 20px}
+  .section-title{font-size:13px;margin-bottom:10px}
+  .param .ico{font-size:20px}
+  .param .lab{font-size:13px}
+  .param .val{font-size:25px;margin-top:0}
+  .finance>div{padding:0 15px}
+  .finance .label{font-size:13px;margin-bottom:9px}
+  .finance .big{font-size:31px}
+  .finance .sub{font-size:14px;margin-top:2px}
+  .checkpoint p{font-size:11px;line-height:1.35;margin:0 0 7px}
+  .codebox{padding:8px 10px;font-size:11px}
+  .copy{font-size:15px}
+}
+
+/* Extra compression for shorter browser windows / visible bookmarks bars. */
+@media (min-width:1051px) and (max-height:800px){
+  #app{grid-template-rows:54px minmax(0,1fr) 126px}
+  .logo-copy span{display:none}
+  .chapter{font-size:14px}
+  .char-panel{padding:13px 18px;margin-top:10px}
+  .char-panel h2{font-size:20px}
+  .char-panel .role{margin-bottom:9px}
+  .meter-label{margin-top:8px}
+  .story-side{padding-top:9px;padding-bottom:9px}
+  .dialogue{padding:14px 20px}
+  .speaker{font-size:16px;margin-bottom:8px}
+  .dialogue-text{font-size:14px;line-height:1.5}
+  .choices{gap:5px}
+  .choice{min-height:43px}
+  .choice-num{font-size:20px}
+  .choice-label{font-size:14px;padding:5px 12px}
+  .choice small{display:none}
+  .bottom-card{padding:9px 17px}
+  .section-title{margin-bottom:6px}
+  .param .ico{font-size:17px}
+  .param .val{font-size:22px}
+  .finance .big{font-size:27px}
+  .checkpoint p{display:none}
+}
+</style>
+
+</head>
+<body>
+<div id="notice" class="notice"></div>
+<div id="app">
+  <header class="topbar">
+    <div class="logo">
+      <div class="logo-mark">◇</div>
+      <div class="logo-copy"><b>NOCTURNE</b><span>INDUSTRIES</span></div>
+    </div>
+    <div class="chapter">
+      <strong id="chapterName">CHAPTER 1</strong>
+      <small id="chapterSub">初任務</small>
+      <strong id="dayText">DAY 7　10:31</strong>
+    </div>
+    <div class="top-actions">
+      <button class="top-btn" id="logBtn">LOG</button>
+      <button class="top-btn" id="menuBtn">☰ MENU</button>
+    </div>
+  </header>
+
+  <main id="game"></main>
+
+  <section class="bottom">
+    <div class="bottom-card">
+      <div class="section-title">PARAMETER</div>
+      <div class="params">
+        <div class="param"><div class="ico">◉</div><div class="lab">判断力</div><div class="val" id="judgement">3</div></div>
+        <div class="param"><div class="ico">♨</div><div class="lab">大胆さ</div><div class="val" id="boldness">3</div></div>
+        <div class="param"><div class="ico">♢</div><div class="lab">信頼度</div><div class="val" id="trust">5</div></div>
+      </div>
+    </div>
+
+    <div class="bottom-card">
+      <div class="finance">
+        <div>
+          <div class="label">FUNDS</div>
+          <div style="font-size:15px;margin-bottom:4px">資金</div>
+          <div class="big" id="funds">2.8</div>
+          <div class="sub">億円</div>
+        </div>
+        <div>
+          <div class="label">INVESTMENT</div>
+          <div style="font-size:15px;margin-bottom:4px">投資中</div>
+          <div class="sub" id="investment">なし</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-card checkpoint">
+      <div class="section-title">CHECKPOINT</div>
+      <p>このコードをコピーして<br>このチャットに送ってください</p>
+      <div class="codebox"><span id="code">NI-C1-I3B3T5M280-P2221211111</span><button class="copy" id="copyBtn">▣</button></div>
+    </div>
+  </section>
+</div>
+
+<script>
+const scenes = {
+  intro:{
+    chapter:"PROLOGUE",sub:"継承",day:"DAY 1　09:00",
+    name:"ヴィクトリア・クロウ",role:"NOCTURNE INDUSTRIES CEO",trust:8,aff:0,
+    speaker:"ヴィクトリア", text:"「あなたの判断力が必要です。」\n\nNOCTURNE本社最上階。\n美しいCEOは、あなたを“Strategist”と呼び、経営不振の子会社再建を任せる。",
+    choices:[
+      ["引き受ける","物語を始める","office",{}],
+      ["条件を確認する","ヴィクトリアの意図を探る","office",{judgement:1}],
+      ["会社の現状を聞く","経営情報を得る","office",{judgement:1}],
+      ["ひとまず承諾する","大胆さ +1","office",{boldness:1}]
+    ]
+  },
+  office:{
+    chapter:"CHAPTER 1",sub:"初任務",day:"DAY 1　10:31",
+    name:"エマ・ローレンス",role:"ヴィクトリア秘書",trust:12,aff:5,
+    speaker:"エマ", text:"「分かりました。」\n\nエマは明らかに安心した表情を見せる。\n\n「それなら、工場へ行く前に一つだけ。」\n「市場情報を見ておいた方がいいと思います。」",
+    choices:[
+      ["ニュースを見る","市場情報から手掛かりを得る","basement",{judgement:1}],
+      ["会社の内部データをさらに調べる","経営情報を深掘り","basement",{judgement:1}],
+      ["エマに彼のことをもっと詳しく聞く","関係性イベント","basement",{trust:1}],
+      ["工場へ急ぐ","大胆さ +1","basement",{boldness:1}]
+    ]
+  },
+  basement:{
+    chapter:"CHAPTER 1",sub:"B4からの回収",day:"DAY 7　09:52",
+    name:"エマ・ローレンス",role:"専属秘書",trust:18,aff:8,
+    speaker:"System", text:"地下4階。\n古い社内図面に存在しないフロア。\n\nVANTA LABORATORIES。\n装置の銘板には『MANUFACTURED: 2049』。\n現在は2026年だ。",
+    choices:[
+      ["Emmaを守るように先へ進む","大胆さ +1","irina",{boldness:1,trust:1}],
+      ["周囲の装置を観察する","判断力 +1","irina",{judgement:1}],
+      ["施設ログを確認する","情報優先","irina",{judgement:1}],
+      ["一度退路を確保する","安全確保","irina",{trust:1}]
+    ]
+  },
+  irina:{
+    chapter:"CHAPTER 1",sub:"イリーナとの取引",day:"DAY 7　10:02",
+    name:"イリーナ・ヴォルコワ",role:"VANTA 研究者",trust:5,aff:0,
+    speaker:"イリーナ", text:"銀髪の女性研究者。\n黒いサイバネティック右腕が戦闘モードへ移行する。\n\n「……何者？」",
+    choices:[
+      ["あなたならどれを選ぶ？","敵対を緩和する","power",{trust:1}],
+      ["設備異常を指摘する","判断力 +1","power",{judgement:1}],
+      ["武器を下ろすよう求める","大胆さ +1","power",{boldness:1}],
+      ["Emmaを後ろへ下げる","信頼 +1","power",{trust:1}]
+    ]
+  },
+  power:{
+    chapter:"CHAPTER 1",sub:"LEVEL Ω",day:"DAY 7　10:08",
+    name:"イリーナ・ヴォルコワ",role:"一時協力者",trust:14,aff:2,
+    speaker:"System", text:"UNKNOWN DEVICE：81MW。\n優先度 LEVEL Ω。\n\n出力を落とす。\nしかし装置は自ら電力を奪い返し、端末へ表示した。\n\nPLEASE DON'T TURN ME OFF.",
+    choices:[
+      ["電力を段階的に下げる","判断力 +1","eveinfo",{judgement:1}],
+      ["イリーナに正体を説明させる","情報解放","eveinfo",{}],
+      ["冷却系を優先する","安全側へ","eveinfo",{trust:1}],
+      ["装置に通信を試みる","大胆さ +1","eveinfo",{boldness:1}]
+    ]
+  },
+  eveinfo:{
+    chapter:"CHAPTER 1",sub:"EVEの覚醒",day:"DAY 7　10:16",
+    name:"E-07",role:"PROJECT EVE",trust:0,aff:0,
+    speaker:"イリーナ", text:"「人工知能と生体組織の完全融合。」\n「PROJECT EVE。」\n\n装置はEmmaを知っている。\nそして、あなたの端末へ表示する。\n\nSTRATEGIST.\nI HAVE BEEN WAITING FOR YOU.",
+    choices:[
+      ["通信を開く","判断力 +1","eveopen",{judgement:1}],
+      ["まず安全条件を確認する","信頼 +1","eveopen",{trust:1}],
+      ["イリーナに詳細を聞く","追加情報","eveopen",{judgement:1}],
+      ["E-07へ名前を尋ねる","関係性イベント","eveopen",{trust:1}]
+    ]
+  },
+  eveopen:{
+    chapter:"CHAPTER 1",sub:"EVEの覚醒",day:"DAY 7　10:21",
+    name:"EVE",role:"PROJECT EVE / SUBJECT E-07",trust:22,aff:18,
+    speaker:"EVE", text:"「……やっと会えた。」\n\n白い髪の人造生命体がカプセルから出る。\n彼女は迷わず、あなたの袖を掴んだ。",
+    choices:[
+      ["『EVE』と名付ける","EVEの好感度上昇","corporate",{trust:1}],
+      ["まず体調を確認する","信頼 +1","corporate",{trust:1}],
+      ["どうして僕を知っている？","謎を掘る","corporate",{judgement:1}],
+      ["ここから出よう","大胆さ +1","corporate",{boldness:1}]
+    ]
+  },
+  corporate:{
+    chapter:"CHAPTER 1",sub:"Corporate Route",day:"DAY 7　10:29",
+    name:"エマ・ローレンス",role:"専属秘書",trust:34,aff:18,
+    speaker:"エマ", text:"「B4を含め、この建物はNOCTURNEの所有です。」\n\nVANTA部隊が接近。\nあなたは戦闘ではなく、法務・警備・所有権を使う。",
+    choices:[
+      ["戦わない。逃げない。仕事をする。","判断力 +1 / 信頼 +1","victoria",{judgement:1,trust:1}],
+      ["警備会社を追加手配する","安全強化","victoria",{trust:1}],
+      ["アクセス権限を移管する","経営判断","victoria",{judgement:1}],
+      ["VANTAへ直接警告する","大胆さ +1","victoria",{boldness:1}]
+    ]
+  },
+  victoria:{
+    chapter:"CHAPTER 1",sub:"ヴィクトリアとの面会",day:"DAY 7　11:02",
+    name:"ヴィクトリア・クロウ",role:"NOCTURNE INDUSTRIES CEO",trust:30,aff:5,
+    speaker:"ヴィクトリア", text:"「あなたらしいわね、Strategist。」\n\nまだ報告していないはずのEVEの存在を、彼女は知っている。\n\nEVEは小さく言う。\n「この人も覚えてる。」",
+    choices:[
+      ["EVEに電話を渡す","記憶イベント","shopping",{trust:1}],
+      ["ヴィクトリアを問い詰める","大胆さ +1","shopping",{boldness:1}],
+      ["本社で直接話す","次へ","shopping",{}],
+      ["会社の再建報告を優先する","経営優先","shopping",{judgement:1}]
+    ]
+  },
+  shopping:{
+    chapter:"CHAPTER 1",sub:"EVEの採用",day:"DAY 7　12:28",
+    name:"EVE",role:"技術解析アシスタント候補",trust:41,aff:28,
+    speaker:"EVE", text:"「私、NOCTURNEで働きたい。」\n\nASTER DYNAMICSの株価は急落。\n4,000万円のSHORTは含み益 +620万円。",
+    choices:[
+      ["SHORT継続。EVEを採用する","大胆さ +1 / EVE正式加入","current",{boldness:1}],
+      ["利益確定してから採用する","堅実ルート","current",{}],
+      ["採用条件を提示する","信頼 +1","current",{trust:1}],
+      ["Victoriaへ確認を取る","経営判断","current",{judgement:1}]
+    ]
+  },
+  current:{
+    chapter:"CHAPTER 1",sub:"真実の欠片",day:"DAY 7　12:47",
+    name:"エマ・ローレンス",role:"専属秘書",trust:78,aff:42,
+    speaker:"エマ", text:"室長、NOCTURNE MATERIALSの経営データを調べていたら、かなり変な取引を見つけました。\n\nHELIOS ADVANCED MATERIALSへ年間約4.8億円。\n販売0、製造使用0、在庫0。",
+    choices:[
+      ["4人でタスクを分担する","チームで情報を収集する","ending",{trust:1}],
+      ["HELIOSについてさらに調べる","資金の流れを追跡する","ending",{judgement:1}],
+      ["EVEの記憶を掘り下げる","彼女の記憶の核心に迫る","ending",{trust:1}],
+      ["市場の動向をチェックする","ASTERを含む市場を分析する","ending",{judgement:1}]
+    ]
+  },
+  ending:{
+    chapter:"CHAPTER 1",sub:"調査の始まり",day:"DAY 7　12:52",
+    name:"TEAM NOCTURNE",role:"初のチーム指揮",trust:82,aff:45,
+    speaker:"System", text:"Emma：HELIOSの取引と承認記録。\nIrina：2049年製造とVANTA。\nEVE：HELIOSとNOCTURNEの記憶。\n\nStrategist：三つの情報を統合する。\n\nCONTINUE IN NEXT BUILD...",
+    end:true
+  }
+};
+
+let state={scene:"intro",judgement:3,boldness:3,trust:5,funds:"2.8",investment:"なし",path:""};
+
+function checkpoint(){
+  const inv = state.scene==="shopping"||state.scene==="current"||state.scene==="ending" ? "I3" : "I0";
+  const money = state.funds==="2.8" ? "M280" : "M"+state.funds.replace(".","");
+  return `NI-C1-${inv}B${state.boldness}T${state.trust}${money}-P${state.path||"0"}`;
+}
+function flash(msg){
+  const n=document.getElementById("notice");n.textContent=msg;n.style.display="block";
+  clearTimeout(window._noticeTimer);window._noticeTimer=setTimeout(()=>n.style.display="none",1600);
+}
+function applyDelta(d={}){
+  if(d.judgement)state.judgement+=d.judgement;
+  if(d.boldness)state.boldness+=d.boldness;
+  if(d.trust)state.trust+=d.trust;
+}
+function go(idx){
+  const s=scenes[state.scene],c=s.choices[idx];
+  state.path += String(idx+1);
+  applyDelta(c[3]||{});
+  state.scene=c[2];
+  if(state.scene==="shopping"||state.scene==="current"||state.scene==="ending"){
+    state.investment="ASTER SHORT 4,000万円";
+  }
+  render();
+}
+function render(){
+  const s=scenes[state.scene];
+  document.getElementById("chapterName").textContent=s.chapter;
+  document.getElementById("chapterSub").textContent=s.sub;
+  document.getElementById("dayText").textContent=s.day;
+  document.getElementById("judgement").textContent=state.judgement;
+  document.getElementById("boldness").textContent=state.boldness;
+  document.getElementById("trust").textContent=state.trust;
+  document.getElementById("funds").textContent=state.funds;
+  document.getElementById("investment").textContent=state.investment;
+  document.getElementById("code").textContent=checkpoint();
+
+  const game=document.getElementById("game");
+  if(s.end){
+    game.innerHTML=`<div class="end-screen"><h2>${s.sub}</h2><p style="white-space:pre-wrap">${s.text}</p></div>`;
+    return;
+  }
+  const trust=Math.max(0,Math.min(100,s.trust||0));
+  const aff=Math.max(0,Math.min(100,s.aff||0));
+  game.innerHTML=`
+    <div class="main">
+      <div class="character-side">
+        <aside class="char-panel">
+          <h2>${s.name}</h2>
+          <div class="role">${s.role}</div>
+          <div class="meter-label"><span>信頼度</span><b>${trust}%</b></div>
+          <div class="meter"><i style="width:${trust}%"></i></div>
+          <div class="meter-label"><span>好感度 <span class="heart">♡</span></span><b>${aff}%</b></div>
+          <div class="meter"><i style="width:${aff}%;background:linear-gradient(90deg,#633c78,#cf75c6)"></i></div>
+        </aside>
+        <div class="hero-space"><div class="hero-portrait"></div></div>
+      </div>
+      <div class="story-side">
+        <section class="dialogue">
+          <div class="speaker">${s.speaker}</div>
+          <div class="dialogue-text">${s.text}</div>
+        </section>
+        <section class="choices">
+          ${s.choices.map((c,i)=>`
+            <button class="choice ${i===0?'active':''}" data-i="${i}">
+              <span class="choice-num">${i+1}</span>
+              <span class="choice-label">${c[0]}<small>${c[1]||""}</small></span>
+            </button>`).join("")}
+        </section>
+      </div>
+    </div>`;
+  game.querySelectorAll(".choice").forEach(btn=>btn.addEventListener("click",()=>go(Number(btn.dataset.i))));
+}
+document.getElementById("logBtn").addEventListener("click",()=>flash("LOGはUI優先の仮ボタンです"));
+document.getElementById("menuBtn").addEventListener("click",()=>flash("MENUは次版で実装予定です"));
+document.getElementById("copyBtn").addEventListener("click",async()=>{
+  const t=document.getElementById("code").textContent;
+  try{await navigator.clipboard.writeText(t);flash("CHECKPOINTをコピーしました")}catch(e){flash("コピー機能はブラウザ環境により使用できません")}
+});
+render();
+</script>
+</body>
+</html>
